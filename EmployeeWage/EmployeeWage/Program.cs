@@ -1,33 +1,25 @@
 ﻿
 
-int Present = 1;
-int FullTime = 1;
 int Emp_per_rate = 20;
 int EmpWage = 0;
 int EmpHr = 0;
 Random random = new Random();
 Random random1 = new Random();
-int Employeestatus = random.Next(0, 2);
-int Employee_Time=random1.Next(0, 2);
-if (Employeestatus == Present)
+int EmployeeAttendance = random.Next(0, 3);
+
+switch (EmployeeAttendance)
 {
-    if(Employee_Time == FullTime)
-    {
-        Console.WriteLine("Employee is Present");
+    case 1:
+        Console.WriteLine("Employee is Present ");
         EmpHr = 8;
-    }
-    else
-    {
-        Console.WriteLine("Employee is Part Time");
+        break;
+    case 2:
+        Console.WriteLine("Part Timer is Present");
         EmpHr = 4;
-
-
-    }
-}
-else
-{
-    Console.WriteLine("Employee is absent");
-    EmpHr = 0;
+        break;
+    default:
+        Console.WriteLine("Employee is Absent ");
+        break;
 }
 
 EmpWage = Emp_per_rate * EmpHr;
