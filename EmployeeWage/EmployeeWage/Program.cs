@@ -1,86 +1,92 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace EmployeeWage
 {
-    class EmployeeWageComputation
+    class Company
     {
-        public const int Full_Time = 1;
-        public const int Part_time = 2;
-        private float Emp_Hr_Per_Rate = 20;
-        public  int Num_of_Working_Days = 20;
-        public  int Max_Hr_Month = 100;
-        public const int Absent = 0;
-        float EmpDailyWage = 0;
-        public float Totalwage = 0;
-        public  int FullTime_WorkingHrs_PerDay = 8;
-        public  int PartTime_WorkingHrs_PerDay = 4;
-       
+        public int EmpWage_Per_Hour;
+        public int FullTime_WorkingHrs_PerDay;
+        public int PartTime_WorkingHrs_PerDay;
+        public int Max_Working_Hrs;
+        public int Max_Working_Days;
+        public String CompanyName;
 
-
-        public EmployeeWageComputation(int Emp_Hr_Per_Rate, int FullTime_WorkingHrs_PerDay, int PartTime_WorkingHrs_PerDay, int Max_Hr_Month, int Num_of_Working_Days)
+        public Company(string companyName, int EmpWage_Per_Hour, int FullTime_WorkingHrs_PerDay, int PartTime_WorkingHrs_PerDay, int Max_Working_Hrs, int Max_Working_Days)
         {
-            this.Emp_Hr_Per_Rate = Emp_Hr_Per_Rate;
+            CompanyName = companyName;
+            this.EmpWage_Per_Hour = EmpWage_Per_Hour;
             this.FullTime_WorkingHrs_PerDay = FullTime_WorkingHrs_PerDay;
             this.PartTime_WorkingHrs_PerDay = PartTime_WorkingHrs_PerDay;
-            this.Max_Hr_Month = Max_Hr_Month;
-            this.Num_of_Working_Days = Num_of_Working_Days;
+            this.Max_Working_Hrs = Max_Working_Hrs;
+            this.Max_Working_Days = Max_Working_Days;
+        }
+    }
+    class EmployeeWageComputaion
+    {
 
-        }
-        private int IsEmployePresent()
+        private const int _IsFullTime = 1;
+        private const int _IsPartTime = 2;
+        private int TotalWage = 0;
+        float EmpDailyWage = 0;
+        private Dictionary<string, Company> companies = new Dictionary<string, Company>();
+
+        public void AddCompany(string CompanyName, int EmpWage_Per_Hour, int FullTime_WorkingHrs_PerDay, int PartTime_WorkingHrs_PerDay, int Max_Working_Hrs, int Max_Working_Days)
         {
-            Random random = new Random();
-            int empcheck = random.Next(0, 3);
-            return empcheck;
+            Company company = new Company(CompanyName.ToLower(), EmpWage_Per_Hour, FullTime_WorkingHrs_PerDay, PartTime_WorkingHrs_PerDay, Max_Working_Hrs, Max_Working_Days);
+            companies.Add(CompanyName.ToLower(), company);
         }
-        public void CalculateWage()
+
+        private int IsEmployeePresent()
         {
-            int DayNumber = 1;
-            int EmpHr = 0;
-           
+            return new Random().Next(0, 3);
+        }
+
+        public void CalculateWage(string CompanyName)
+        {
+            int EmpWorkingHrs=0;
             int TotalWorkingHrs = 0;
-           
-            while (DayNumber<=Num_of_Working_Days && TotalWorkingHrs<=Max_Hr_Month)
+            int DayNumber = 0;
+
+            if (!companies.ContainsKey(CompanyName.ToLower()))
+                throw new ArgumentNullException("Company don't exist");
+            companies.TryGetValue(CompanyName.ToLower(), out Company company);
+
+            while (TotalWorkingHrs <= company.Max_Working_Hrs && DayNumber < company.Max_Working_Days)
             {
-                switch (IsEmployePresent())
-
+                switch (IsEmployeePresent())
                 {
-                    case Full_Time:
-                        EmpHr = FullTime_WorkingHrs_PerDay;
+                    case _IsFullTime:
+                        EmpWorkingHrs = company.FullTime_WorkingHrs_PerDay;
                         break;
-
-                    case Part_time:
-                        EmpHr = PartTime_WorkingHrs_PerDay;
+                    case _IsPartTime:
+                        EmpWorkingHrs = company.PartTime_WorkingHrs_PerDay;
                         break;
-                    case Absent:
-                        EmpHr = 0;
+                    default:
+                        EmpWorkingHrs = 0;
                         break;
-
-
                 }
-                EmpDailyWage = EmpHr * Emp_Hr_Per_Rate;
-                Totalwage += EmpDailyWage;
+                EmpDailyWage = EmpWorkingHrs * company.EmpWage_Per_Hour;
+                TotalWorkingHrs += EmpWorkingHrs;
                 DayNumber++;
-                 TotalWorkingHrs += EmpHr;
-
             }
-            Console.WriteLine("Total working days :" + (DayNumber - 1) + "\n Totalworking hours : " + TotalWorkingHrs);
-            Console.WriteLine("Total Wage :" + Totalwage);
-
+            TotalWage = TotalWorkingHrs * company.EmpWage_Per_Hour;
+            Console.WriteLine("Company name: " + CompanyName);
+            Console.WriteLine("Total working days : "+ (DayNumber)+"\nTotal working hours :"+ TotalWorkingHrs+"\n Total emoloyee wage: "+ TotalWage);
         }
-        static void Main(String[] args)
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Employee Computation program ");
-            EmployeeWageComputation employeeWageComputation = new EmployeeWageComputation(20, 8, 4, 100, 20);
-            employeeWageComputation.CalculateWage();
+            // UC8 Employees monthly wage using Function for Multiple companies
+            Console.WriteLine("Welcome to Employee Wage Computation!");
+            Console.WriteLine();
+            EmployeeWageComputaion wage = new EmployeeWageComputaion();
+            wage.AddCompany("TATA", 20, 8, 4, 100, 20);
+            wage.AddCompany("Mahindra", 30, 8, 4, 100, 20);
+            wage.CalculateWage("Tata");
+            wage.CalculateWage("Mahindra");
         }
- 
-    } }
-
-       
-
-
-
-
-
-
-
-
+    }
+}
