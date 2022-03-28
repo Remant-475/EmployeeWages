@@ -21,10 +21,16 @@ namespace EmployeeWage
             Emwages[0] = Wage.CalculateWage("Reliance");
             Emwages[1] = Wage.CalculateWage("TATA");
             Emwages[2] = Wage.CalculateWage("Mahindra");
+           
+            
+            ArrayList CompanyWages = new ArrayList();
+            CompanyWages.Add(Wage.CalculateWage("Reliance"));
+            CompanyWages.Add(Wage.CalculateWage("TATA"));
+            CompanyWages.Add(Wage.CalculateWage("Mahindra"));
 
-            foreach (var element in Emwages)
+            foreach (var item in CompanyWages)
             {
-                Console.WriteLine(element);
+                Console.WriteLine(item);
             }
 
         }
